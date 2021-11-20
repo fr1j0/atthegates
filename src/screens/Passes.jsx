@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useCallback, useEffect, useState } from "react";
 import {
   Image,
   ImageBackground,
@@ -11,12 +11,45 @@ import {
 import { AntDesign, MaterialCommunityIcons } from "@expo/vector-icons";
 import { AnimatedSVGPath } from "react-native-svg-animations";
 import colors from "../config";
+import dayjs from "dayjs";
+import { useTimer } from "use-timer";
+import Dots from "react-native-dots-pagination";
+import config from "../config";
 
 export default function Passes({ navigation }) {
+  const [hideEID, setHideEID] = useState(true);
+  const [hidePPN, setHidePPN] = useState(true);
+  const [hideDOB, setHideDOB] = useState(true);
+  const [timerString, setTimerString] = useState("");
+
+  const eid = "84-1971-3297075-3";
+  const eid2 = "84-1971-*******-3";
+  const ppn = "PAI838655";
+  const ppn2 = "PAI83****";
+  const dob = "18 Apr 1971";
+  const dob2 = "***********";
+
   const radius = 6;
   const size = 148;
   const d = `M20,20 h${size} a${radius},${radius} 0 0 1 ${radius},${radius} v${size} a${radius},${radius} 0 0 1 -${radius},${radius} h-${size} a${radius},${radius} 0 0 1 -${radius},-${radius} v-${size} a${radius},${radius} 0 0 1 ${radius},-${radius} z`;
   const strokeLength = 298;
+
+  const days = 2;
+  const date = dayjs().subtract(days, "days").format("DD MMM YYYY");
+
+  const TIMER_LIMIT = 5 * 60; // 5 minutes
+
+  const { time, start, pause, reset, status } = useTimer({
+    autostart: true,
+    endTime: TIMER_LIMIT,
+  });
+
+  useEffect(() => {
+    const secondsLeft = TIMER_LIMIT - time;
+    const timeStr = dayjs(secondsLeft * 1000).format("mm ss");
+    setTimerString(timeStr);
+    if (secondsLeft === 0) start();
+  }, [time]);
 
   return (
     <SafeAreaView style={styles.container}>
@@ -37,6 +70,18 @@ export default function Passes({ navigation }) {
         </View>
       </View>
       <View style={styles.pane}>
+        <Dots
+          length={2}
+          active={0}
+          marginHorizontal={3}
+          paddingVertical={0}
+          passiveDotWidth={8}
+          passiveDotHeight={8}
+          activeDotWidth={8}
+          activeDotHeight={7}
+          activeColor={config.dotActive}
+          passiveColor={config.dotPassive}
+        />
         <ImageBackground
           source={require("../../assets/images/mosque2.png")}
           resizeMode="stretch"
@@ -47,10 +92,10 @@ export default function Passes({ navigation }) {
             resizeMode="stretch"
             style={styles.paneLogo}
             imageStyle={{
-              top: 9,
-              left: 8,
-              width: 28,
-              height: 28,
+              top: 8,
+              left: 7,
+              width: 27,
+              height: 27,
             }}
           />
           <View style={styles.paneInfo}>
@@ -74,15 +119,26 @@ export default function Passes({ navigation }) {
 
           <View style={styles.profileData}>
             <Text style={styles.name}>FERNANDO CASTILLO CARDENOSA</Text>
-            <Text style={styles.eid}>
-              EID: 84-1971-3297075-3 &bull; PPN: PAI838655
+            <Text
+              style={styles.eid}
+              onPress={() => {
+                setHideEID((h) => !h);
+                setHidePPN((p) => !p);
+              }}
+            >
+              {`EID: ${hideEID ? eid2 : eid} • PPN: ${hidePPN ? ppn2 : ppn}`}
             </Text>
-            <Text style={styles.dob}>DoB: 18 Apr 1971</Text>
+            <Text
+              style={styles.dob}
+              onPress={() => {
+                setHideDOB((d) => !d);
+              }}
+            >{`DoB: ${hideDOB ? dob2 : dob}`}</Text>
           </View>
         </ImageBackground>
         <View style={styles.qr}>
-          <Text style={styles.qrText1}>2 days - PCR Negative</Text>
-          <Text style={styles.qrText2}>Since 06 Nov 2021</Text>
+          <Text style={styles.qrText1}>{days} days - PCR Negative</Text>
+          <Text style={styles.qrText2}>Since {date}</Text>
           <View style={styles.qrImageWrapper}>
             <Image
               style={styles.qrImage}
@@ -101,7 +157,15 @@ export default function Passes({ navigation }) {
               />
             </View>
           </View>
-          <Text style={styles.qrUpdate}>QR code will be updated in 04:22</Text>
+          <Text style={styles.qrUpdate}>
+            QR code will be updated in {timerString}
+          </Text>
+        </View>
+        <View style={styles.prevResults}>
+          <View style={styles.prevResultsHeader}>
+            <Text style={styles.prevResultsTagline}>Previous results</Text>
+            <Text style={styles.prevResultsViewAll}>VIEW ALL</Text>
+          </View>
         </View>
       </View>
     </SafeAreaView>
@@ -143,7 +207,7 @@ const styles = StyleSheet.create({
     color: colors.secondary,
   },
   pane: {
-    paddingTop: 30,
+    paddingTop: 20,
     backgroundColor: colors.secondary,
     flex: 1,
     borderRadius: 15 | 15 | 0 | 0,
@@ -153,9 +217,9 @@ const styles = StyleSheet.create({
     position: "absolute",
     left: 15,
     top: 15,
-    width: 30,
-    height: 30,
-    padding: 22,
+    width: 29,
+    height: 29,
+    padding: 20,
     backgroundColor: "white",
     borderRadius: 25,
   },
@@ -225,7 +289,7 @@ const styles = StyleSheet.create({
     color: colors.text1,
   },
   qrUpdate: {
-    fontSize: 10,
+    fontSize: 11,
     marginTop: 15,
     color: colors.text2,
   },
@@ -250,5 +314,19 @@ const styles = StyleSheet.create({
     position: "absolute",
     top: -22,
     left: -16,
+  },
+  prevResults: {
+    marginTop: 20,
+  },
+  prevResultsHeader: {
+    flexDirection: "row",
+    justifyContent: "space-between",
+  },
+  prevResultsTagline: {
+    color: config.text2,
+  },
+  prevResultsViewAll: {
+    color: config.primary,
+    fontWeight: "bold",
   },
 });

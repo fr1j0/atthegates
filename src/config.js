@@ -5,6 +5,8 @@ export default {
   text1: "#505A6D",
   text2: "#99A3B7",
   text3: "#03808D",
+  dotActive: "#6F7D97",
+  dotPAssive: "#B7BECE",
   shadow: {
     shadowColor: "#000",
     shadowOffset: {
