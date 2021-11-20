@@ -1,4 +1,4 @@
-import React, { useCallback, useEffect, useState } from "react";
+import React, { useEffect, useState } from "react";
 import {
   Image,
   ImageBackground,
@@ -34,7 +34,7 @@ export default function Passes({ navigation }) {
   const d = `M20,20 h${size} a${radius},${radius} 0 0 1 ${radius},${radius} v${size} a${radius},${radius} 0 0 1 -${radius},${radius} h-${size} a${radius},${radius} 0 0 1 -${radius},-${radius} v-${size} a${radius},${radius} 0 0 1 ${radius},-${radius} z`;
   const strokeLength = 298;
 
-  const days = 2;
+  const days = 1;
   const date = dayjs().subtract(days, "days").format("DD MMM YYYY");
 
   const TIMER_LIMIT = 5 * 60; // 5 minutes
@@ -93,6 +93,16 @@ export default function Passes({ navigation }) {
             style={styles.paneLogo}
             imageStyle={{
               top: 8,
+              left: 7,
+              width: 27,
+              height: 27,
+            }}
+          />
+          <Image
+            source={require("../../assets/images/pincho.png")}
+            style={styles.paneExempt}
+            imageStyle={{
+              top: 48,
               left: 7,
               width: 27,
               height: 27,
@@ -166,6 +176,7 @@ export default function Passes({ navigation }) {
             <Text style={styles.prevResultsTagline}>Previous results</Text>
             <Text style={styles.prevResultsViewAll}>VIEW ALL</Text>
           </View>
+          <View style={styles.prevResultsItem}></View>
         </View>
       </View>
     </SafeAreaView>
@@ -222,6 +233,13 @@ const styles = StyleSheet.create({
     padding: 20,
     backgroundColor: "white",
     borderRadius: 25,
+  },
+  paneExempt: {
+    position: "absolute",
+    left: 15,
+    top: 75,
+    width: 25,
+    height: 25,
   },
   paneInfo: {
     position: "absolute",
