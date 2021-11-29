@@ -34,7 +34,7 @@ export default function Passes({ navigation }) {
   const d = `M20,20 h${size} a${radius},${radius} 0 0 1 ${radius},${radius} v${size} a${radius},${radius} 0 0 1 -${radius},${radius} h-${size} a${radius},${radius} 0 0 1 -${radius},-${radius} v-${size} a${radius},${radius} 0 0 1 ${radius},-${radius} z`;
   const strokeLength = 298;
 
-  const days = 1;
+  const days = 2;
   const date = dayjs().subtract(days, "days").format("DD MMM YYYY");
 
   const TIMER_LIMIT = 5 * 60; // 5 minutes
@@ -83,8 +83,8 @@ export default function Passes({ navigation }) {
           passiveColor={config.dotPassive}
         />
         <ImageBackground
-          source={require("../../assets/images/mosque2.png")}
-          resizeMode="stretch"
+          source={require("../../assets/images/mosque.jpg")}
+          resizeMode="cover"
           style={styles.image}
         >
           <ImageBackground
@@ -176,7 +176,12 @@ export default function Passes({ navigation }) {
             <Text style={styles.prevResultsTagline}>Previous results</Text>
             <Text style={styles.prevResultsViewAll}>VIEW ALL</Text>
           </View>
-          <View style={styles.prevResultsItem}></View>
+          {/* <View style={styles.prevResultsItem}>
+            <View>
+              <Text style={styles.prevResultsItemDate}>18 Nov 2021</Text>
+              <Text style={styles.prevResultsItemResult}>PCR Negative</Text>
+            </View>
+          </View> */}
         </View>
       </View>
     </SafeAreaView>
