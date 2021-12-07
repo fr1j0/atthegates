@@ -10,7 +10,6 @@ import {
   View,
 } from "react-native";
 import { AntDesign, Feather, MaterialCommunityIcons } from "@expo/vector-icons";
-import { LinearGradient } from "expo-linear-gradient";
 import { hideEID } from "../../utils";
 import colors from "../../config";
 import UserForm from "./components/User";
