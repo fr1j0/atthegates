@@ -40,7 +40,7 @@ const UserForm = ({ showDrawer = false, setRefetch }) => {
         pic: parsedValues.userPic,
       });
     })();
-  }, [userName, userEID, userPP, userBirthday, userPic]);
+  }, []);
 
   useEffect(() => {
     if (showDrawer) refRBSheet.current.open();
