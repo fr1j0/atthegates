@@ -20,6 +20,7 @@ import {
   hideEID as hideEIDUtil,
   hidePPN as hidePPNUtil,
   hideDoB as hideDoBUtil,
+  formatHours,
 } from "../../utils";
 
 export default function Passes({ navigation }) {
@@ -27,6 +28,9 @@ export default function Passes({ navigation }) {
   const [hidePPN, setHidePPN] = useState(true);
   const [hideDOB, setHideDOB] = useState(true);
   const [timerString, setTimerString] = useState("");
+  const [timestamp, setTimestamp] = useState(new Date().getTime());
+  const [formattedDate, setFormattedDate] = useState("");
+  const [elapsedTime, setElapsedTime] = useState("");
   const [userData, setUserData] = useState({
     name: "",
     eid: "",
@@ -39,16 +43,21 @@ export default function Passes({ navigation }) {
   const size = 148;
   const d = `M20,20 h${size} a${radius},${radius} 0 0 1 ${radius},${radius} v${size} a${radius},${radius} 0 0 1 -${radius},${radius} h-${size} a${radius},${radius} 0 0 1 -${radius},-${radius} v-${size} a${radius},${radius} 0 0 1 ${radius},-${radius} z`;
   const strokeLength = 298;
-
-  const days = 2;
-  const date = dayjs().subtract(days, "days").format("DD MMM YYYY");
-
   const TIMER_LIMIT = 5 * 60; // 5 minutes
 
   const { time, start, pause, reset, status } = useTimer({
     autostart: true,
     endTime: TIMER_LIMIT,
   });
+
+  useEffect(() => {
+    const hoursDiff = dayjs().diff(dayjs(timestamp), "hour");
+    const daysDiff = Math.floor(hoursDiff / 24);
+
+    setElapsedTime(formatHours(hoursDiff));
+
+    setFormattedDate(dayjs().subtract(daysDiff, "days").format("DD MMM YYYY"));
+  }, [timestamp]);
 
   useEffect(() => {
     (async () => {
@@ -71,6 +80,23 @@ export default function Passes({ navigation }) {
     if (secondsLeft === 0) start();
   }, [time]);
 
+  const handleRefreshDate = async () => {
+    try {
+      const newTimestamp = new Date().getTime();
+      await AsyncStorage.mergeItem(
+        STORE_KEY,
+        JSON.stringify({
+          date: newTimestamp,
+        })
+      );
+
+      setTimestamp(setTimestamp);
+
+      reset();
+      start();
+    } catch (e) {}
+  };
+
   const userPic =
     userData.pic === "jo"
       ? require("../../../assets/images/jo.png")
@@ -87,7 +113,11 @@ export default function Passes({ navigation }) {
         />
         <Text style={styles.headerTitle}>Green Pass</Text>
         <View style={styles.headerOptions}>
-          <MaterialCommunityIcons style={styles.headerOption} name="refresh" />
+          <MaterialCommunityIcons
+            style={styles.headerOption}
+            name="refresh"
+            onPress={handleRefreshDate}
+          />
           <MaterialCommunityIcons
             style={styles.headerOption}
             name="dots-vertical"
@@ -174,8 +204,8 @@ export default function Passes({ navigation }) {
           </View>
         </ImageBackground>
         <View style={styles.qr}>
-          <Text style={styles.qrText1}>{days} days - PCR Negative</Text>
-          <Text style={styles.qrText2}>Since {date}</Text>
+          <Text style={styles.qrText1}>{elapsedTime} - PCR Negative</Text>
+          <Text style={styles.qrText2}>Since {formattedDate}</Text>
           <View style={styles.qrImageWrapper}>
             <Image
               style={styles.qrImage}
