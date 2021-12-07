@@ -138,7 +138,7 @@ const UserForm = ({ showDrawer = false, setRefetch }) => {
             labelField="label"
             valueField="value"
             placeholder={!isFocus ? "Select photo" : "..."}
-            value={userData.pic}
+            value={userPic}
             onFocus={() => setIsFocus(true)}
             onBlur={() => setIsFocus(false)}
             onChange={(item) => {
