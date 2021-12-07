@@ -28,7 +28,7 @@ export default function Passes({ navigation }) {
   const [hidePPN, setHidePPN] = useState(true);
   const [hideDOB, setHideDOB] = useState(true);
   const [timerString, setTimerString] = useState("");
-  const [timestamp, setTimestamp] = useState(new Date().getTime());
+  const [timestamp, setTimestamp] = useState();
   const [formattedDate, setFormattedDate] = useState("");
   const [elapsedTime, setElapsedTime] = useState("");
   const [userData, setUserData] = useState({
@@ -51,12 +51,21 @@ export default function Passes({ navigation }) {
   });
 
   useEffect(() => {
-    const hoursDiff = dayjs().diff(dayjs(timestamp), "hour");
-    const daysDiff = Math.floor(hoursDiff / 24);
+    (async () => {
+      const store = await AsyncStorage.getItem(STORE_KEY);
+      const parsedValues = store != null ? JSON.parse(store) : null;
 
-    setElapsedTime(formatHours(hoursDiff));
+      const ts = parsedValues.date ?? new Date().getTime();
 
-    setFormattedDate(dayjs().subtract(daysDiff, "days").format("DD MMM YYYY"));
+      const hoursDiff = dayjs().diff(dayjs(ts), "hour");
+      const daysDiff = Math.floor(hoursDiff / 24);
+
+      setElapsedTime(formatHours(hoursDiff));
+
+      setFormattedDate(
+        dayjs().subtract(daysDiff, "days").format("DD MMM YYYY")
+      );
+    })();
   }, [timestamp]);
 
   useEffect(() => {
@@ -90,7 +99,7 @@ export default function Passes({ navigation }) {
         })
       );
 
-      setTimestamp(setTimestamp);
+      setTimestamp(newTimestamp);
 
       reset();
       start();
