@@ -40,7 +40,7 @@ const UserForm = ({ showDrawer = false, setRefetch }) => {
         pic: parsedValues.userPic,
       });
     })();
-  }, []);
+  }, [userName, userEID, userPP, userBirthday, userPic]);
 
   useEffect(() => {
     if (showDrawer) refRBSheet.current.open();
@@ -138,7 +138,7 @@ const UserForm = ({ showDrawer = false, setRefetch }) => {
             labelField="label"
             valueField="value"
             placeholder={!isFocus ? "Select photo" : "..."}
-            value={userPic}
+            value={userPic || userData.pic}
             onFocus={() => setIsFocus(true)}
             onBlur={() => setIsFocus(false)}
             onChange={(item) => {
