@@ -8,26 +8,32 @@ import {
   Text,
   View,
 } from "react-native";
+import AsyncStorage from "@react-native-async-storage/async-storage";
 import { AntDesign, MaterialCommunityIcons } from "@expo/vector-icons";
 import { AnimatedSVGPath } from "react-native-svg-animations";
-import colors from "../config";
+import colors from "../../config";
 import dayjs from "dayjs";
 import { useTimer } from "use-timer";
 import Dots from "react-native-dots-pagination";
-import config from "../config";
+import { STORE_KEY } from "../../constants/main";
+import {
+  hideEID as hideEIDUtil,
+  hidePPN as hidePPNUtil,
+  hideDoB as hideDoBUtil,
+} from "../../utils";
 
 export default function Passes({ navigation }) {
   const [hideEID, setHideEID] = useState(true);
   const [hidePPN, setHidePPN] = useState(true);
   const [hideDOB, setHideDOB] = useState(true);
   const [timerString, setTimerString] = useState("");
-
-  const eid = "84-1971-3297075-3";
-  const eid2 = "84-1971-*******-3";
-  const ppn = "PAI838655";
-  const ppn2 = "PAI83****";
-  const dob = "18 Apr 1971";
-  const dob2 = "***********";
+  const [userData, setUserData] = useState({
+    name: "",
+    eid: "",
+    ppn: "",
+    bd: "",
+    pic: "",
+  });
 
   const radius = 6;
   const size = 148;
@@ -45,11 +51,30 @@ export default function Passes({ navigation }) {
   });
 
   useEffect(() => {
+    (async () => {
+      const jsonValue = await AsyncStorage.getItem(STORE_KEY);
+      const parsedValues = jsonValue != null ? JSON.parse(jsonValue) : null;
+      setUserData({
+        name: parsedValues.userName,
+        eid: parsedValues.userEID,
+        ppn: parsedValues.userPP,
+        bd: parsedValues.userBirthday,
+        pic: parsedValues.userPic,
+      });
+    })();
+  }, []);
+
+  useEffect(() => {
     const secondsLeft = TIMER_LIMIT - time;
     const timeStr = dayjs(secondsLeft * 1000).format("mm ss");
     setTimerString(timeStr);
     if (secondsLeft === 0) start();
   }, [time]);
+
+  const userPic =
+    userData.pic === "jo"
+      ? require("../../../assets/images/jo.png")
+      : require("../../../assets/images/fer.png");
 
   return (
     <SafeAreaView style={styles.container}>
@@ -79,16 +104,16 @@ export default function Passes({ navigation }) {
           passiveDotHeight={8}
           activeDotWidth={8}
           activeDotHeight={7}
-          activeColor={config.dotActive}
-          passiveColor={config.dotPassive}
+          activeColor={colors.dotActive}
+          passiveColor={colors.dotPassive}
         />
         <ImageBackground
-          source={require("../../assets/images/mosque.jpg")}
+          source={require("../../../assets/images/mosque.jpg")}
           resizeMode="cover"
           style={styles.image}
         >
           <ImageBackground
-            source={require("../../assets/images/logo-green.png")}
+            source={require("../../../assets/images/logo-green.png")}
             resizeMode="stretch"
             style={styles.paneLogo}
             imageStyle={{
@@ -99,7 +124,7 @@ export default function Passes({ navigation }) {
             }}
           />
           <Image
-            source={require("../../assets/images/pincho.png")}
+            source={require("../../../assets/images/pincho.png")}
             style={styles.paneExempt}
             imageStyle={{
               top: 48,
@@ -116,7 +141,7 @@ export default function Passes({ navigation }) {
           </View>
 
           <ImageBackground
-            source={require("../../assets/images/fer.png")}
+            source={userPic}
             resizeMode="cover"
             style={styles.profilePic}
             imageStyle={{
@@ -128,7 +153,7 @@ export default function Passes({ navigation }) {
           />
 
           <View style={styles.profileData}>
-            <Text style={styles.name}>FERNANDO CASTILLO CARDENOSA</Text>
+            <Text style={styles.name}>{userData.name}</Text>
             <Text
               style={styles.eid}
               onPress={() => {
@@ -136,14 +161,16 @@ export default function Passes({ navigation }) {
                 setHidePPN((p) => !p);
               }}
             >
-              {`EID: ${hideEID ? eid2 : eid} • PPN: ${hidePPN ? ppn2 : ppn}`}
+              {`EID: ${
+                hideEID ? hideEIDUtil(userData.eid) : userData.eid
+              } • PPN: ${hidePPN ? hidePPNUtil(userData.ppn) : userData.ppn}`}
             </Text>
             <Text
               style={styles.dob}
               onPress={() => {
                 setHideDOB((d) => !d);
               }}
-            >{`DoB: ${hideDOB ? dob2 : dob}`}</Text>
+            >{`DoB: ${hideDOB ? hideDoBUtil(userData.bd) : userData.bd}`}</Text>
           </View>
         </ImageBackground>
         <View style={styles.qr}>
@@ -152,7 +179,7 @@ export default function Passes({ navigation }) {
           <View style={styles.qrImageWrapper}>
             <Image
               style={styles.qrImage}
-              source={require("../../assets/images/qr.png")}
+              source={require("../../../assets/images/qr.png")}
             />
             <View style={styles.qrBorder}>
               <AnimatedSVGPath
@@ -288,10 +315,12 @@ const styles = StyleSheet.create({
     textAlign: "center",
     marginBottom: 6,
     fontWeight: "bold",
+    textTransform: "uppercase",
   },
   eid: {
     color: "white",
     marginBottom: 6,
+    textTransform: "uppercase",
   },
   dob: {
     color: "white",
@@ -346,10 +375,10 @@ const styles = StyleSheet.create({
     justifyContent: "space-between",
   },
   prevResultsTagline: {
-    color: config.text2,
+    color: colors.text2,
   },
   prevResultsViewAll: {
-    color: config.primary,
+    color: colors.primary,
     fontWeight: "bold",
   },
 });

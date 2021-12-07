@@ -1,4 +1,5 @@
-import React from "react";
+import React, { useEffect, useRef, useState } from "react";
+import AsyncStorage from "@react-native-async-storage/async-storage";
 import {
   Image,
   Platform,
@@ -9,9 +10,39 @@ import {
   View,
 } from "react-native";
 import { AntDesign, Feather, MaterialCommunityIcons } from "@expo/vector-icons";
-import colors from "../config";
+import { hideEID } from "../../utils";
+import colors from "../../config";
+import UserForm from "./components/User";
+import { STORE_KEY } from "../../constants/main";
 
-export default function Home({ navigation }) {
+const Home = ({ navigation }) => {
+  const [refetch, setRefetch] = useState(false);
+  const [userData, setUserData] = useState({
+    name: "",
+    eid: "",
+    pp: "",
+    bd: "",
+  });
+  const [showDrawer, setShowDrawer] = useState(false);
+
+  const handleMenuClick = () => {
+    setShowDrawer((sd) => !sd);
+  };
+
+  useEffect(() => {
+    (async () => {
+      const jsonValue = await AsyncStorage.getItem(STORE_KEY);
+      const parsedValues = jsonValue != null ? JSON.parse(jsonValue) : null;
+      setUserData({
+        name: parsedValues.userName,
+        eid: parsedValues.userEID,
+        pp: parsedValues.userPP,
+        bd: parsedValues.userBirthday,
+      });
+      setRefetch(false);
+    })();
+  }, [refetch]);
+
   return (
     <SafeAreaView style={styles.container}>
       <View style={styles.header}>
@@ -20,19 +51,26 @@ export default function Home({ navigation }) {
           name="menu"
           size={24}
           color="black"
+          onPress={handleMenuClick}
         />
         <MaterialCommunityIcons style={styles.headerBell} name="bell-outline" />
         <Image
           style={styles.headerImage}
-          source={require("../../assets/images/logo.png")}
+          source={require("../../../assets/images/logo.png")}
         />
         <Text style={styles.headerALHOSN}>ALHOSN</Text>
       </View>
       <View style={styles.pane}>
         <TouchableWithoutFeedback onPress={() => navigation.navigate("Passes")}>
           <View style={styles.user}>
-            <Text style={styles.userName}>FERNANDO CASTILLO CARDE...</Text>
-            <Text style={styles.userEID}>784-1971-********-3</Text>
+            <Text
+              style={styles.userName}
+              ellipsizeMode="tail"
+              numberOfLines={1}
+            >
+              {userData.name}
+            </Text>
+            <Text style={styles.userEID}>{hideEID(userData.eid)}</Text>
             <AntDesign name="right" style={styles.userArrow} />
           </View>
         </TouchableWithoutFeedback>
@@ -40,9 +78,12 @@ export default function Home({ navigation }) {
           <Text style={styles.addUser}>+ ADD USER</Text>
         </TouchableWithoutFeedback>
       </View>
+      <UserForm showDrawer={showDrawer} setRefetch={setRefetch} />
     </SafeAreaView>
   );
-}
+};
+
+export default Home;
 
 const styles = StyleSheet.create({
   container: {
@@ -89,6 +130,7 @@ const styles = StyleSheet.create({
   },
   user: {
     padding: 17,
+    paddingRight: 50,
     backgroundColor: "white",
     borderRadius: 10,
     ...colors.shadow,
@@ -97,6 +139,7 @@ const styles = StyleSheet.create({
     fontSize: 18,
     fontWeight: "bold",
     color: colors.text1,
+    textTransform: "uppercase",
   },
   userEID: {
     fontSize: 14,
