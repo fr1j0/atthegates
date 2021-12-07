@@ -10,6 +10,7 @@ import {
   View,
 } from "react-native";
 import { AntDesign, Feather, MaterialCommunityIcons } from "@expo/vector-icons";
+import { LinearGradient } from "expo-linear-gradient";
 import { hideEID } from "../../utils";
 import colors from "../../config";
 import UserForm from "./components/User";
@@ -63,6 +64,23 @@ const Home = ({ navigation }) => {
       <View style={styles.pane}>
         <TouchableWithoutFeedback onPress={() => navigation.navigate("Passes")}>
           <View style={styles.user}>
+            <LinearGradient
+              style={styles.userAvatar}
+              colors={["#FCE798", "#FCE798", "#ffff"]}
+              locations={[0, 0.5, 0.5, 1]}
+              useAngle={true}
+              angle={45}
+              angleCenter={{ x: 0.5, y: 0.5 }}
+            >
+              <Feather
+                style={styles.userAvatarIcon}
+                name="user"
+                size={10}
+                color="#eeab1a"
+                onPress={handleMenuClick}
+              />
+            </LinearGradient>
+
             <Text
               style={styles.userName}
               ellipsizeMode="tail"
@@ -133,7 +151,16 @@ const styles = StyleSheet.create({
     paddingRight: 50,
     backgroundColor: "white",
     borderRadius: 10,
+    overflow: "hidden",
     ...colors.shadow,
+  },
+  userAvatar: {
+    position: "absolute",
+    padding: 12,
+  },
+  userAvatarIcon: {
+    position: "absolute",
+    padding: 2,
   },
   userName: {
     fontSize: 18,
