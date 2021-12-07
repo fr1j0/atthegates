@@ -64,23 +64,10 @@ const Home = ({ navigation }) => {
       <View style={styles.pane}>
         <TouchableWithoutFeedback onPress={() => navigation.navigate("Passes")}>
           <View style={styles.user}>
-            <LinearGradient
+            <Image
               style={styles.userAvatar}
-              colors={["#FCE798", "#FCE798", "#ffff"]}
-              locations={[0, 0.5, 0.5, 1]}
-              useAngle={true}
-              angle={45}
-              angleCenter={{ x: 0.5, y: 0.5 }}
-            >
-              <Feather
-                style={styles.userAvatarIcon}
-                name="user"
-                size={10}
-                color="#eeab1a"
-                onPress={handleMenuClick}
-              />
-            </LinearGradient>
-
+              source={require("../../../assets/images/user-avatar.png")}
+            />
             <Text
               style={styles.userName}
               ellipsizeMode="tail"
@@ -156,7 +143,8 @@ const styles = StyleSheet.create({
   },
   userAvatar: {
     position: "absolute",
-    padding: 12,
+    width: 28,
+    height: 28,
   },
   userAvatarIcon: {
     position: "absolute",
