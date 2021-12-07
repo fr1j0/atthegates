@@ -89,7 +89,7 @@ const UserForm = ({ showDrawer = false, setRefetch }) => {
       {renderLabel()}
       <RBSheet
         ref={refRBSheet}
-        height={475}
+        height={490}
         closeOnDragDown={true}
         closeOnPressMask={false}
         customStyles={{
@@ -173,7 +173,6 @@ const styles = StyleSheet.create({
   },
   container: {
     backgroundColor: "white",
-    padding: 16,
   },
   dropdown: {
     height: 50,
