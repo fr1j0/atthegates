@@ -180,6 +180,7 @@ const styles = StyleSheet.create({
     borderWidth: 0.5,
     borderRadius: 8,
     paddingHorizontal: 8,
+    marginBottom: 30,
   },
   icon: {
     marginRight: 5,
