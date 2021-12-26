@@ -155,7 +155,7 @@ export default function Passes({ navigation }) {
           passiveColor={colors.dotPassive}
         />
       </View>
-      <ScrollView style={styles.pane}>
+      <ScrollView style={styles.pane} contentContainerStyle={{ flexGrow: 1 }}>
         <ImageBackground
           source={require("../../../assets/images/mosque.jpg")}
           resizeMode="cover"
@@ -253,7 +253,7 @@ export default function Passes({ navigation }) {
             <Text style={styles.prevResultsViewAll}>VIEW ALL</Text>
           </View>
           {timestampsList.map((ts) => (
-            <View style={styles.prevResultsItem}>
+            <View key={ts} style={styles.prevResultsItem}>
               <Text style={styles.prevResultsItemDate}>
                 {ts.format("DD MMM YYYY")}
               </Text>
@@ -318,7 +318,7 @@ const styles = StyleSheet.create({
     backgroundColor: colors.secondary,
     flex: 1,
     borderRadius: 15 | 15 | 0 | 0,
-    padding: 14,
+    padding: 14 | 14 | 0 | 14,
   },
   paneLogo: {
     position: "absolute",
@@ -434,6 +434,7 @@ const styles = StyleSheet.create({
   },
   prevResults: {
     marginTop: 50,
+    marginBottom: 30,
   },
   prevResultsHeader: {
     flexDirection: "row",
