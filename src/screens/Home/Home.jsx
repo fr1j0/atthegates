@@ -122,7 +122,7 @@ const styles = StyleSheet.create({
   },
   headerALHOSN: {
     color: "white",
-    fontSize: 23,
+    fontSize: 35,
     marginLeft: 10,
     fontWeight: "700",
   },
@@ -150,13 +150,14 @@ const styles = StyleSheet.create({
     padding: 2,
   },
   userName: {
-    fontSize: 18,
+    fontSize: 20,
     fontWeight: "bold",
     color: colors.text1,
     textTransform: "uppercase",
   },
   userEID: {
-    fontSize: 14,
+    fontSize: 16,
+    marginTop: 5,
     color: colors.text2,
   },
   userArrow: {

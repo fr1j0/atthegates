@@ -48,11 +48,7 @@ const UserForm = ({ showDrawer = false, setRefetch }) => {
 
   const renderLabel = () => {
     if (userPic || isFocus) {
-      return (
-        <Text style={[styles.label, isFocus && { color: "blue" }]}>
-          Dropdown label
-        </Text>
-      );
+      return <Text style={[styles.label, isFocus && { color: "blue" }]}></Text>;
     }
     return null;
   };

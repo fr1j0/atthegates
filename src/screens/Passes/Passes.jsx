@@ -4,6 +4,7 @@ import {
   ImageBackground,
   Platform,
   SafeAreaView,
+  ScrollView,
   StyleSheet,
   Text,
   View,
@@ -29,6 +30,7 @@ export default function Passes({ navigation }) {
   const [hideDOB, setHideDOB] = useState(true);
   const [timerString, setTimerString] = useState("");
   const [timestamp, setTimestamp] = useState();
+  const [timestampsList, setTimestampsList] = useState([]);
   const [formattedDate, setFormattedDate] = useState("");
   const [elapsedTime, setElapsedTime] = useState("");
   const [userData, setUserData] = useState({
@@ -65,6 +67,12 @@ export default function Passes({ navigation }) {
       setFormattedDate(
         dayjs().subtract(daysDiff, "days").format("DD MMM YYYY")
       );
+
+      setTimestampsList([
+        dayjs().subtract(7, "days"),
+        dayjs().subtract(14, "days"),
+        dayjs().subtract(21, "days"),
+      ]);
     })();
   }, [timestamp]);
 
@@ -133,7 +141,7 @@ export default function Passes({ navigation }) {
           />
         </View>
       </View>
-      <View style={styles.pane}>
+      <View style={styles.dotsView}>
         <Dots
           length={2}
           active={0}
@@ -146,6 +154,8 @@ export default function Passes({ navigation }) {
           activeColor={colors.dotActive}
           passiveColor={colors.dotPassive}
         />
+      </View>
+      <ScrollView style={styles.pane}>
         <ImageBackground
           source={require("../../../assets/images/mosque.jpg")}
           resizeMode="cover"
@@ -242,14 +252,21 @@ export default function Passes({ navigation }) {
             <Text style={styles.prevResultsTagline}>Previous results</Text>
             <Text style={styles.prevResultsViewAll}>VIEW ALL</Text>
           </View>
-          {/* <View style={styles.prevResultsItem}>
-            <View>
-              <Text style={styles.prevResultsItemDate}>18 Nov 2021</Text>
-              <Text style={styles.prevResultsItemResult}>PCR Negative</Text>
+          {timestampsList.map((ts) => (
+            <View style={styles.prevResultsItem}>
+              <Text style={styles.prevResultsItemDate}>
+                {ts.format("DD MMM YYYY")}
+              </Text>
+              <Text style={styles.prevResultsItemResult}>
+                <Text style={styles.prevResultsItemResultBullet}>
+                  {"\u2B24"}
+                </Text>{" "}
+                PCR Negative
+              </Text>
             </View>
-          </View> */}
+          ))}
         </View>
-      </View>
+      </ScrollView>
     </SafeAreaView>
   );
 }
@@ -287,6 +304,14 @@ const styles = StyleSheet.create({
     fontSize: 24,
     marginLeft: 15,
     color: colors.secondary,
+  },
+  dotsView: {
+    height: 25,
+    backgroundColor: colors.secondary,
+    borderRadius: 15 | 15 | 0 | 0,
+    top: 25,
+    zIndex: 1,
+    alignItems: "center",
   },
   pane: {
     paddingTop: 20,
@@ -344,7 +369,8 @@ const styles = StyleSheet.create({
     marginTop: 10,
     backgroundColor: colors.terciary,
     alignItems: "center",
-    borderRadius: 5,
+    borderRadius: 10,
+    overflow: "hidden",
   },
   name: {
     fontSize: 20,
@@ -380,7 +406,7 @@ const styles = StyleSheet.create({
     color: colors.text1,
   },
   qrUpdate: {
-    fontSize: 11,
+    fontSize: 14,
     marginTop: 15,
     color: colors.text2,
   },
@@ -407,17 +433,39 @@ const styles = StyleSheet.create({
     left: -16,
   },
   prevResults: {
-    marginTop: 20,
+    marginTop: 50,
   },
   prevResultsHeader: {
     flexDirection: "row",
     justifyContent: "space-between",
+    marginBottom: 20,
   },
   prevResultsTagline: {
     color: colors.text2,
+    fontSize: 18,
   },
   prevResultsViewAll: {
     color: colors.primary,
     fontWeight: "bold",
+  },
+  prevResultsItem: {
+    borderBottomColor: colors.dotPassive,
+    borderBottomWidth: 1,
+    marginTop: 10,
+  },
+  prevResultsItemDate: {
+    fontSize: 18,
+    fontWeight: "bold",
+    color: colors.text1,
+  },
+  prevResultsItemResult: {
+    color: colors.text2,
+    marginTop: 10,
+    marginBottom: 20,
+  },
+  prevResultsItemResultBullet: {
+    fontSize: 15,
+    color: colors.primary,
+    marginRight: 10,
   },
 });
