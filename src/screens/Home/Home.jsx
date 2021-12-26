@@ -44,7 +44,10 @@ const Home = ({ navigation }) => {
   }, [refetch]);
 
   return (
-    <SafeAreaView style={styles.container}>
+    <SafeAreaView
+      style={styles.container}
+      contentContainerStyle={{ flexGrow: 1 }}
+    >
       <View style={styles.header}>
         <Feather
           style={styles.headerBars}
@@ -78,7 +81,7 @@ const Home = ({ navigation }) => {
             <AntDesign name="right" style={styles.userArrow} />
           </View>
         </TouchableWithoutFeedback>
-        <TouchableWithoutFeedback onPress={() => console.log("adsad")}>
+        <TouchableWithoutFeedback onPress={() => {}}>
           <Text style={styles.addUser}>+ ADD USER</Text>
         </TouchableWithoutFeedback>
       </View>

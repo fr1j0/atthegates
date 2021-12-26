@@ -58,7 +58,6 @@ export default function Passes({ navigation }) {
       const parsedValues = store != null ? JSON.parse(store) : null;
 
       const ts = parsedValues.date ?? new Date().getTime();
-
       const hoursDiff = dayjs().diff(dayjs(ts), "hour");
       const daysDiff = Math.floor(hoursDiff / 24);
 
@@ -155,7 +154,7 @@ export default function Passes({ navigation }) {
           passiveColor={colors.dotPassive}
         />
       </View>
-      <ScrollView style={styles.pane} contentContainerStyle={{ flexGrow: 1 }}>
+      <ScrollView style={styles.pane}>
         <ImageBackground
           source={require("../../../assets/images/mosque.jpg")}
           resizeMode="cover"
@@ -376,7 +375,7 @@ const styles = StyleSheet.create({
     fontSize: 20,
     color: "white",
     flexWrap: "wrap",
-    maxWidth: 200,
+    maxWidth: 400,
     textAlign: "center",
     marginBottom: 6,
     fontWeight: "bold",
