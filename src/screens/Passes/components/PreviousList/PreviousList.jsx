@@ -33,6 +33,7 @@ const PreviousList = ({ showDrawer = false, timestamps = [] }) => {
           },
           container: {
             backgroundColor: "#edeff7",
+            borderRadius: 15 | 15 | 0 | 0,
           },
         }}
       >
