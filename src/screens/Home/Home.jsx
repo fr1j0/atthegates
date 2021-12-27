@@ -44,48 +44,52 @@ const Home = ({ navigation }) => {
   }, [refetch]);
 
   return (
-    <SafeAreaView
-      style={styles.container}
-      contentContainerStyle={{ flexGrow: 1 }}
-    >
-      <View style={styles.header}>
-        <Feather
-          style={styles.headerBars}
-          name="menu"
-          size={24}
-          color="black"
-          onPress={handleMenuClick}
-        />
-        <MaterialCommunityIcons style={styles.headerBell} name="bell-outline" />
-        <Image
-          style={styles.headerImage}
-          source={require("../../../assets/images/logo.png")}
-        />
-        <Text style={styles.headerALHOSN}>ALHOSN</Text>
-      </View>
-      <View style={styles.pane}>
-        <TouchableWithoutFeedback onPress={() => navigation.navigate("Passes")}>
-          <View style={styles.user}>
-            <Image
-              style={styles.userAvatar}
-              source={require("../../../assets/images/user-avatar.png")}
-            />
-            <Text
-              style={styles.userName}
-              ellipsizeMode="tail"
-              numberOfLines={1}
-            >
-              {userData.name}
-            </Text>
-            <Text style={styles.userEID}>{hideEID(userData.eid)}</Text>
-            <AntDesign name="right" style={styles.userArrow} />
-          </View>
-        </TouchableWithoutFeedback>
-        <TouchableWithoutFeedback onPress={() => {}}>
-          <Text style={styles.addUser}>+ ADD USER</Text>
-        </TouchableWithoutFeedback>
-      </View>
+    <SafeAreaView style={styles.container}>
       <UserForm showDrawer={showDrawer} setRefetch={setRefetch} />
+      <View style={styles.content}>
+        <View style={styles.header}>
+          <Feather
+            style={styles.headerBars}
+            name="menu"
+            size={24}
+            color="black"
+            onPress={handleMenuClick}
+          />
+          <MaterialCommunityIcons
+            style={styles.headerBell}
+            name="bell-outline"
+          />
+          <Image
+            style={styles.headerImage}
+            source={require("../../../assets/images/logo.png")}
+          />
+          <Text style={styles.headerALHOSN}>ALHOSN</Text>
+        </View>
+        <View style={styles.pane}>
+          <TouchableWithoutFeedback
+            onPress={() => navigation.navigate("Passes")}
+          >
+            <View style={styles.user}>
+              <Image
+                style={styles.userAvatar}
+                source={require("../../../assets/images/user-avatar.png")}
+              />
+              <Text
+                style={styles.userName}
+                ellipsizeMode="tail"
+                numberOfLines={1}
+              >
+                {userData.name}
+              </Text>
+              <Text style={styles.userEID}>{hideEID(userData.eid)}</Text>
+              <AntDesign name="right" style={styles.userArrow} />
+            </View>
+          </TouchableWithoutFeedback>
+          <TouchableWithoutFeedback onPress={() => {}}>
+            <Text style={styles.addUser}>+ ADD USER</Text>
+          </TouchableWithoutFeedback>
+        </View>
+      </View>
     </SafeAreaView>
   );
 };
@@ -97,6 +101,12 @@ const styles = StyleSheet.create({
     flex: 1,
     backgroundColor: colors.primary,
     paddingTop: Platform.OS === "android" ? 40 : 0,
+  },
+  content: {
+    flex: 1,
+    position: "absolute",
+    top: 40,
+    bottom: 0,
   },
   header: {
     flexDirection: "row",

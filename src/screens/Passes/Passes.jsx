@@ -23,6 +23,7 @@ import {
   hideDoB as hideDoBUtil,
   formatHours,
 } from "../../utils";
+import PreviousList from "./components/PreviousList";
 
 export default function Passes({ navigation }) {
   const [hideEID, setHideEID] = useState(true);
@@ -40,6 +41,7 @@ export default function Passes({ navigation }) {
     bd: "",
     pic: "",
   });
+  const [showDrawer, setShowDrawer] = useState(false);
 
   const radius = 6;
   const size = 148;
@@ -51,6 +53,10 @@ export default function Passes({ navigation }) {
     autostart: true,
     endTime: TIMER_LIMIT,
   });
+
+  const handleShowListClick = () => {
+    setShowDrawer((sd) => !sd);
+  };
 
   useEffect(() => {
     (async () => {
@@ -67,11 +73,16 @@ export default function Passes({ navigation }) {
         dayjs().subtract(daysDiff, "days").format("DD MMM YYYY")
       );
 
-      setTimestampsList([
-        dayjs().subtract(7, "days"),
-        dayjs().subtract(14, "days"),
-        dayjs().subtract(21, "days"),
-      ]);
+      const monthsBack = 5;
+      const numberOfTests = Math.round((monthsBack * 30) / 7);
+      let testsTimestamps = [];
+
+      for (let i = 0; i < numberOfTests; i++) {
+        const newTs = dayjs().subtract(i * 7, "days");
+        testsTimestamps = [...testsTimestamps, newTs];
+      }
+
+      setTimestampsList(testsTimestamps);
     })();
   }, [timestamp]);
 
@@ -120,152 +131,168 @@ export default function Passes({ navigation }) {
 
   return (
     <SafeAreaView style={styles.container}>
-      <View style={styles.header}>
-        <AntDesign
-          name="left"
-          size={24}
-          style={styles.headerBack}
-          onPress={() => navigation.goBack()}
-        />
-        <Text style={styles.headerTitle}>Green Pass</Text>
-        <View style={styles.headerOptions}>
-          <MaterialCommunityIcons
-            style={styles.headerOption}
-            name="refresh"
-            onPress={handleRefreshDate}
+      <PreviousList showDrawer={showDrawer} timestamps={timestampsList} />
+      <View style={styles.content}>
+        <View style={styles.header}>
+          <AntDesign
+            name="left"
+            size={24}
+            style={styles.headerBack}
+            onPress={() => navigation.goBack()}
           />
-          <MaterialCommunityIcons
-            style={styles.headerOption}
-            name="dots-vertical"
-          />
-        </View>
-      </View>
-      <View style={styles.dotsView}>
-        <Dots
-          length={2}
-          active={0}
-          marginHorizontal={3}
-          paddingVertical={0}
-          passiveDotWidth={8}
-          passiveDotHeight={8}
-          activeDotWidth={8}
-          activeDotHeight={7}
-          activeColor={colors.dotActive}
-          passiveColor={colors.dotPassive}
-        />
-      </View>
-      <ScrollView style={styles.pane}>
-        <ImageBackground
-          source={require("../../../assets/images/mosque.jpg")}
-          resizeMode="cover"
-          style={styles.image}
-        >
-          <ImageBackground
-            source={require("../../../assets/images/logo-green.png")}
-            resizeMode="stretch"
-            style={styles.paneLogo}
-            imageStyle={{
-              top: 8,
-              left: 7,
-              width: 27,
-              height: 27,
-            }}
-          />
-          <Image
-            source={require("../../../assets/images/pincho.png")}
-            style={styles.paneExempt}
-            imageStyle={{
-              top: 48,
-              left: 7,
-              width: 27,
-              height: 27,
-            }}
-          />
-          <View style={styles.paneInfo}>
+          <Text style={styles.headerTitle}>Green Pass</Text>
+          <View style={styles.headerOptions}>
             <MaterialCommunityIcons
-              name="information-outline"
-              style={styles.paneInfoIcon}
+              style={styles.headerOption}
+              name="refresh"
+              onPress={handleRefreshDate}
+            />
+            <MaterialCommunityIcons
+              style={styles.headerOption}
+              name="dots-vertical"
             />
           </View>
-
-          <ImageBackground
-            source={userPic}
-            resizeMode="cover"
-            style={styles.profilePic}
-            imageStyle={{
-              top: 2,
-              left: 0,
-              width: 100,
-              height: 100,
-            }}
+        </View>
+        <View style={styles.dotsView}>
+          <Dots
+            length={2}
+            active={0}
+            marginHorizontal={3}
+            paddingVertical={0}
+            passiveDotWidth={8}
+            passiveDotHeight={8}
+            activeDotWidth={8}
+            activeDotHeight={7}
+            activeColor={colors.dotActive}
+            passiveColor={colors.dotPassive}
           />
-
-          <View style={styles.profileData}>
-            <Text style={styles.name}>{userData.name}</Text>
-            <Text
-              style={styles.eid}
-              onPress={() => {
-                setHideEID((h) => !h);
-                setHidePPN((p) => !p);
-              }}
+        </View>
+        <View style={styles.pane}>
+          <ScrollView>
+            <ImageBackground
+              source={require("../../../assets/images/mosque.jpg")}
+              resizeMode="cover"
+              style={styles.image}
             >
-              {`EID: ${
-                hideEID ? hideEIDUtil(userData.eid) : userData.eid
-              } • PPN: ${hidePPN ? hidePPNUtil(userData.ppn) : userData.ppn}`}
-            </Text>
-            <Text
-              style={styles.dob}
-              onPress={() => {
-                setHideDOB((d) => !d);
-              }}
-            >{`DoB: ${hideDOB ? hideDoBUtil(userData.bd) : userData.bd}`}</Text>
-          </View>
-        </ImageBackground>
-        <View style={styles.qr}>
-          <Text style={styles.qrText1}>{elapsedTime} - PCR Negative</Text>
-          <Text style={styles.qrText2}>Since {formattedDate}</Text>
-          <View style={styles.qrImageWrapper}>
-            <Image
-              style={styles.qrImage}
-              source={require("../../../assets/images/qr.png")}
-            />
-            <View style={styles.qrBorder}>
-              <AnimatedSVGPath
-                strokeColor={colors.terciary}
-                duration={4000}
-                strokeWidth={4}
-                scale={1}
-                delay={100}
-                d={d}
-                loop={true}
-                strokeDashArray={[strokeLength]}
+              <ImageBackground
+                source={require("../../../assets/images/logo-green.png")}
+                resizeMode="stretch"
+                style={styles.paneLogo}
+                imageStyle={{
+                  top: 8,
+                  left: 7,
+                  width: 27,
+                  height: 27,
+                }}
               />
-            </View>
-          </View>
-          <Text style={styles.qrUpdate}>
-            QR code will be updated in {timerString}
-          </Text>
-        </View>
-        <View style={styles.prevResults}>
-          <View style={styles.prevResultsHeader}>
-            <Text style={styles.prevResultsTagline}>Previous results</Text>
-            <Text style={styles.prevResultsViewAll}>VIEW ALL</Text>
-          </View>
-          {timestampsList.map((ts) => (
-            <View key={ts} style={styles.prevResultsItem}>
-              <Text style={styles.prevResultsItemDate}>
-                {ts.format("DD MMM YYYY")}
+              <Image
+                source={require("../../../assets/images/pincho.png")}
+                style={styles.paneExempt}
+                imageStyle={{
+                  top: 48,
+                  left: 7,
+                  width: 27,
+                  height: 27,
+                }}
+              />
+              <View style={styles.paneInfo}>
+                <MaterialCommunityIcons
+                  name="information-outline"
+                  style={styles.paneInfoIcon}
+                />
+              </View>
+
+              <ImageBackground
+                source={userPic}
+                resizeMode="cover"
+                style={styles.profilePic}
+                imageStyle={{
+                  top: 2,
+                  left: 0,
+                  width: 100,
+                  height: 100,
+                }}
+              />
+
+              <View style={styles.profileData}>
+                <Text style={styles.name}>{userData.name}</Text>
+                <Text
+                  style={styles.eid}
+                  onPress={() => {
+                    setHideEID((h) => !h);
+                    setHidePPN((p) => !p);
+                  }}
+                >
+                  {`EID: ${
+                    hideEID ? hideEIDUtil(userData.eid) : userData.eid
+                  } • PPN: ${
+                    hidePPN ? hidePPNUtil(userData.ppn) : userData.ppn
+                  }`}
+                </Text>
+                <Text
+                  style={styles.dob}
+                  onPress={() => {
+                    setHideDOB((d) => !d);
+                  }}
+                >{`DoB: ${
+                  hideDOB ? hideDoBUtil(userData.bd) : userData.bd
+                }`}</Text>
+              </View>
+            </ImageBackground>
+            <View style={styles.qr}>
+              <Text style={styles.qrText1}>{elapsedTime} - PCR Negative</Text>
+              <Text style={styles.qrText2}>Since {formattedDate}</Text>
+              <View style={styles.qrImageWrapper}>
+                <Image
+                  style={styles.qrImage}
+                  source={require("../../../assets/images/qr.png")}
+                />
+                <View style={styles.qrBorder}>
+                  <AnimatedSVGPath
+                    strokeColor={colors.terciary}
+                    duration={4000}
+                    strokeWidth={4}
+                    scale={1}
+                    delay={100}
+                    d={d}
+                    loop={true}
+                    strokeDashArray={[strokeLength]}
+                  />
+                </View>
+              </View>
+              <Text style={styles.qrUpdate}>
+                QR code will be updated in {timerString}
               </Text>
-              <Text style={styles.prevResultsItemResult}>
-                <Text style={styles.prevResultsItemResultBullet}>
-                  {"\u2B24"}
-                </Text>{" "}
-                PCR Negative
-              </Text>
             </View>
-          ))}
+            <View style={styles.prevResults}>
+              <View style={styles.prevResultsHeader}>
+                <Text style={styles.prevResultsTagline}>Previous results</Text>
+                <Text
+                  style={styles.prevResultsViewAll}
+                  onPress={handleShowListClick}
+                >
+                  VIEW ALL
+                </Text>
+              </View>
+              {timestampsList
+                ? timestampsList.slice(0, 3).map((ts) => (
+                    <View key={ts} style={styles.prevResultsItem}>
+                      <Text style={styles.prevResultsItemDate}>
+                        {ts.format("DD MMM YYYY")}
+                      </Text>
+                      <Text style={styles.prevResultsItemResult}>
+                        <Text style={styles.prevResultsItemResultBullet}>
+                          {"\u2B24"}
+                        </Text>{" "}
+                        PCR Negative
+                      </Text>
+                    </View>
+                  ))
+                : null}
+            </View>
+          </ScrollView>
         </View>
-      </ScrollView>
+      </View>
     </SafeAreaView>
   );
 }
@@ -275,6 +302,13 @@ const styles = StyleSheet.create({
     flex: 1,
     backgroundColor: colors.primary,
     paddingTop: Platform.OS === "android" ? 40 : 0,
+  },
+  content: {
+    flex: 1,
+    position: "absolute",
+    top: 40,
+    left: 0,
+    right: 0,
   },
   header: {
     height: 42,
@@ -314,10 +348,9 @@ const styles = StyleSheet.create({
   },
   pane: {
     paddingTop: 20,
+    paddingHorizontal: 14,
     backgroundColor: colors.secondary,
-    flex: 1,
     borderRadius: 15 | 15 | 0 | 0,
-    padding: 14 | 14 | 0 | 14,
   },
   paneLogo: {
     position: "absolute",
