@@ -31,6 +31,9 @@ const PreviousList = ({ showDrawer = false, timestamps = [] }) => {
           wrapper: {
             backgroundColor: "transparent",
           },
+          container: {
+            backgroundColor: "#edeff7",
+          },
         }}
       >
         <Text style={styles.prevResultsTagline}>Previous results</Text>
@@ -52,7 +55,7 @@ const PreviousList = ({ showDrawer = false, timestamps = [] }) => {
             : null}
         </ScrollView>
         <TouchableWithoutFeedback onPress={handleBackClick}>
-          <Text style={styles.back}>BACK</Text>
+          <Text style={styles.back}>Back</Text>
         </TouchableWithoutFeedback>
       </RBSheet>
     </View>
@@ -69,6 +72,7 @@ const styles = StyleSheet.create({
   pane: {
     marginTop: 20,
     marginBottom: 90,
+    backgroundColor: "#edeff7",
   },
   prevResultsTagline: {
     color: colors.text1,
@@ -98,10 +102,10 @@ const styles = StyleSheet.create({
     marginRight: 10,
   },
   back: {
-    color: colors.primary,
+    color: colors.text1,
     fontSize: 18,
     backgroundColor: "white",
-    bottom: 20,
+    bottom: 30,
     left: 20,
     right: 20,
     position: "absolute",
