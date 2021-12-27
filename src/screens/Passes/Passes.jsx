@@ -3,6 +3,7 @@ import {
   Image,
   ImageBackground,
   Platform,
+  Pressable,
   SafeAreaView,
   ScrollView,
   StyleSheet,
@@ -167,128 +168,133 @@ export default function Passes({ navigation }) {
             passiveColor={colors.dotPassive}
           />
         </View>
-
-        <ScrollView style={styles.pane}>
-          <ImageBackground
-            source={require("../../../assets/images/mosque.jpg")}
-            resizeMode="cover"
-            style={styles.image}
-          >
+        <View style={styles.pane}>
+          <ScrollView contentContainerStyle={styles.paneScroll}>
             <ImageBackground
-              source={require("../../../assets/images/logo-green.png")}
-              resizeMode="stretch"
-              style={styles.paneLogo}
-              imageStyle={{
-                top: 8,
-                left: 7,
-                width: 27,
-                height: 27,
-              }}
-            />
-            <Image
-              source={require("../../../assets/images/pincho.png")}
-              style={styles.paneExempt}
-              imageStyle={{
-                top: 48,
-                left: 7,
-                width: 27,
-                height: 27,
-              }}
-            />
-            <View style={styles.paneInfo}>
-              <MaterialCommunityIcons
-                name="information-outline"
-                style={styles.paneInfoIcon}
-              />
-            </View>
-
-            <ImageBackground
-              source={userPic}
+              source={require("../../../assets/images/mosque.jpg")}
               resizeMode="cover"
-              style={styles.profilePic}
-              imageStyle={{
-                top: 2,
-                left: 0,
-                width: 100,
-                height: 100,
-              }}
-            />
-
-            <View style={styles.profileData}>
-              <Text style={styles.name}>{userData.name}</Text>
-              <Text
-                style={styles.eid}
-                onPress={() => {
-                  setHideEID((h) => !h);
-                  setHidePPN((p) => !p);
+              style={styles.image}
+            >
+              <ImageBackground
+                source={require("../../../assets/images/logo-green.png")}
+                resizeMode="stretch"
+                style={styles.paneLogo}
+                imageStyle={{
+                  top: 8,
+                  left: 7,
+                  width: 27,
+                  height: 27,
                 }}
-              >
-                {`EID: ${
-                  hideEID ? hideEIDUtil(userData.eid) : userData.eid
-                } • PPN: ${hidePPN ? hidePPNUtil(userData.ppn) : userData.ppn}`}
-              </Text>
-              <Text
-                style={styles.dob}
-                onPress={() => {
-                  setHideDOB((d) => !d);
-                }}
-              >{`DoB: ${
-                hideDOB ? hideDoBUtil(userData.bd) : userData.bd
-              }`}</Text>
-            </View>
-          </ImageBackground>
-          <View style={styles.qr}>
-            <Text style={styles.qrText1}>{elapsedTime} - PCR Negative</Text>
-            <Text style={styles.qrText2}>Since {formattedDate}</Text>
-            <View style={styles.qrImageWrapper}>
-              <Image
-                style={styles.qrImage}
-                source={require("../../../assets/images/qr.png")}
               />
-              <View style={styles.qrBorder}>
-                <AnimatedSVGPath
-                  strokeColor={colors.terciary}
-                  duration={4000}
-                  strokeWidth={4}
-                  scale={1}
-                  delay={100}
-                  d={d}
-                  loop={true}
-                  strokeDashArray={[strokeLength]}
+              <Image
+                source={require("../../../assets/images/pincho.png")}
+                style={styles.paneExempt}
+                imageStyle={{
+                  top: 48,
+                  left: 7,
+                  width: 27,
+                  height: 27,
+                }}
+              />
+              <View style={styles.paneInfo}>
+                <MaterialCommunityIcons
+                  name="information-outline"
+                  style={styles.paneInfoIcon}
                 />
               </View>
-            </View>
-            <Text style={styles.qrUpdate}>
-              QR code will be updated in {timerString}
-            </Text>
-          </View>
-          <View style={styles.prevResults}>
-            <View style={styles.prevResultsHeader}>
-              <Text style={styles.prevResultsTagline}>Previous results</Text>
-              <Text
-                style={styles.prevResultsViewAll}
-                onPress={handleShowListClick}
-              >
-                VIEW ALL
+
+              <ImageBackground
+                source={userPic}
+                resizeMode="cover"
+                style={styles.profilePic}
+                imageStyle={{
+                  top: 2,
+                  left: 0,
+                  width: 100,
+                  height: 100,
+                }}
+              />
+
+              <View style={styles.profileData}>
+                <Text style={styles.name}>{userData.name}</Text>
+                <Text
+                  style={styles.eid}
+                  onPress={() => {
+                    setHideEID((h) => !h);
+                    setHidePPN((p) => !p);
+                  }}
+                >
+                  {`EID: ${
+                    hideEID ? hideEIDUtil(userData.eid) : userData.eid
+                  } • PPN: ${
+                    hidePPN ? hidePPNUtil(userData.ppn) : userData.ppn
+                  }`}
+                </Text>
+                <Text
+                  style={styles.dob}
+                  onPress={() => {
+                    setHideDOB((d) => !d);
+                  }}
+                >{`DoB: ${
+                  hideDOB ? hideDoBUtil(userData.bd) : userData.bd
+                }`}</Text>
+              </View>
+            </ImageBackground>
+            <View style={styles.qr}>
+              <Text style={styles.qrText1}>{elapsedTime} - PCR Negative</Text>
+              <Text style={styles.qrText2}>Since {formattedDate}</Text>
+              <View style={styles.qrImageWrapper}>
+                <Image
+                  style={styles.qrImage}
+                  source={require("../../../assets/images/qr.png")}
+                />
+                <View style={styles.qrBorder}>
+                  <AnimatedSVGPath
+                    strokeColor={colors.terciary}
+                    duration={4000}
+                    strokeWidth={4}
+                    scale={1}
+                    delay={100}
+                    d={d}
+                    loop={true}
+                    strokeDashArray={[strokeLength]}
+                  />
+                </View>
+              </View>
+              <Text style={styles.qrUpdate}>
+                QR code will be updated in {timerString}
               </Text>
             </View>
-            {timestampsList
-              ? timestampsList.slice(0, 3).map((ts) => (
-                  <View key={ts} style={styles.prevResultsItem}>
-                    <Text style={styles.prevResultsItemDate}>
-                      {ts.format("DD MMM YYYY")}
-                    </Text>
-                    <Text style={styles.prevResultsItemResult}>
-                      <Text style={styles.prevResultsItemResultBullet}>
-                        {"\u2B24"}
-                      </Text>{" "}
-                      PCR Negative
-                    </Text>
-                  </View>
-                ))
-              : null}
-          </View>
-        </ScrollView>
+            <View style={styles.prevResults}>
+              <View style={styles.prevResultsHeader}>
+                <Text style={styles.prevResultsTagline}>Previous results</Text>
+                <Pressable>
+                  <Text
+                    style={styles.prevResultsViewAll}
+                    onPress={handleShowListClick}
+                  >
+                    VIEW ALL
+                  </Text>
+                </Pressable>
+              </View>
+              {timestampsList
+                ? timestampsList.slice(0, 3).map((ts) => (
+                    <View key={ts} style={styles.prevResultsItem}>
+                      <Text style={styles.prevResultsItemDate}>
+                        {ts.format("DD MMM YYYY")}
+                      </Text>
+                      <Text style={styles.prevResultsItemResult}>
+                        <Text style={styles.prevResultsItemResultBullet}>
+                          {"\u2B24"}
+                        </Text>{" "}
+                        PCR Negative
+                      </Text>
+                    </View>
+                  ))
+                : null}
+            </View>
+          </ScrollView>
+        </View>
       </View>
     </SafeAreaView>
   );
@@ -344,11 +350,14 @@ const styles = StyleSheet.create({
     alignItems: "center",
   },
   pane: {
+    flex: 1,
     paddingTop: 20,
     paddingHorizontal: 14,
     backgroundColor: colors.secondary,
     borderRadius: 15 | 15 | 0 | 0,
-    paddingBottom: 100,
+  },
+  paneScroll: {
+    flexGrow: 1,
   },
   paneLogo: {
     position: "absolute",
