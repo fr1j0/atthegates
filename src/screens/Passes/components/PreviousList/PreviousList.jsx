@@ -38,7 +38,7 @@ const PreviousList = ({ showDrawer = false, timestamps = [] }) => {
         }}
       >
         <Text style={styles.prevResultsTagline}>Previous results</Text>
-        <ScrollView style={styles.pane}>
+        <ScrollView style={styles.pane} showsVerticalScrollIndicator={false}>
           {timestamps
             ? timestamps.map((ts) => (
                 <View key={ts} style={styles.prevResultsItem}>
@@ -68,6 +68,7 @@ export default PreviousList;
 const styles = StyleSheet.create({
   container: {
     flex: 1,
+    position: "absolute",
     paddingTop: Platform.OS === "android" ? 40 : 0,
   },
   pane: {

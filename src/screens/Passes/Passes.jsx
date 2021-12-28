@@ -78,7 +78,7 @@ export default function Passes({ navigation }) {
       const numberOfTests = Math.round((monthsBack * 30) / 7);
       let testsTimestamps = [];
 
-      for (let i = 0; i < numberOfTests; i++) {
+      for (let i = 1; i <= numberOfTests; i++) {
         const newTs = dayjs().subtract(i * 7, "days");
         testsTimestamps = [...testsTimestamps, newTs];
       }
@@ -169,7 +169,10 @@ export default function Passes({ navigation }) {
           />
         </View>
         <View style={styles.pane}>
-          <ScrollView contentContainerStyle={styles.paneScroll}>
+          <ScrollView
+            contentContainerStyle={styles.paneScroll}
+            showsVerticalScrollIndicator={false}
+          >
             <ImageBackground
               source={require("../../../assets/images/mosque.jpg")}
               resizeMode="cover"
@@ -268,14 +271,12 @@ export default function Passes({ navigation }) {
             <View style={styles.prevResults}>
               <View style={styles.prevResultsHeader}>
                 <Text style={styles.prevResultsTagline}>Previous results</Text>
-                <Pressable>
-                  <Text
-                    style={styles.prevResultsViewAll}
-                    onPress={handleShowListClick}
-                  >
-                    VIEW ALL
-                  </Text>
-                </Pressable>
+                <Text
+                  style={styles.prevResultsViewAll}
+                  onPress={handleShowListClick}
+                >
+                  VIEW ALL
+                </Text>
               </View>
               {timestampsList
                 ? timestampsList.slice(0, 3).map((ts) => (
@@ -308,10 +309,6 @@ const styles = StyleSheet.create({
   },
   content: {
     flex: 1,
-    position: "absolute",
-    top: 40,
-    left: 0,
-    right: 0,
   },
   header: {
     height: 42,
@@ -356,9 +353,7 @@ const styles = StyleSheet.create({
     backgroundColor: colors.secondary,
     borderRadius: 15 | 15 | 0 | 0,
   },
-  paneScroll: {
-    flexGrow: 1,
-  },
+  paneScroll: {},
   paneLogo: {
     position: "absolute",
     left: 15,
