@@ -3,7 +3,6 @@ import {
   Image,
   ImageBackground,
   Platform,
-  Pressable,
   SafeAreaView,
   ScrollView,
   StyleSheet,
@@ -13,6 +12,7 @@ import {
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { AntDesign, MaterialCommunityIcons } from "@expo/vector-icons";
 import { AnimatedSVGPath } from "react-native-svg-animations";
+// import Video from "react-native-video";
 import colors from "../../config";
 import dayjs from "dayjs";
 import { useTimer } from "use-timer";
@@ -25,6 +25,7 @@ import {
   formatHours,
 } from "../../utils";
 import PreviousList from "./components/PreviousList";
+// import video from "../../../assets/images/Alhosn.mp4";
 
 export default function Passes({ navigation }) {
   const [hideEID, setHideEID] = useState(true);
@@ -130,6 +131,8 @@ export default function Passes({ navigation }) {
       ? require("../../../assets/images/jo.png")
       : require("../../../assets/images/fer.png");
 
+  const vid = require("../../../assets/images/Alhosn.mp4");
+
   return (
     <SafeAreaView style={styles.container}>
       <PreviousList showDrawer={showDrawer} timestamps={timestampsList} />
@@ -173,76 +176,84 @@ export default function Passes({ navigation }) {
             contentContainerStyle={styles.paneScroll}
             showsVerticalScrollIndicator={false}
           >
-            <ImageBackground
-              source={require("../../../assets/images/mosque.jpg")}
-              resizeMode="cover"
-              style={styles.image}
-            >
+            <View style={styles.image}>
+              {/* <Video
+                source={require("../../../assets/images/Alhosn")} // the video file
+                paused={false} // make it start
+                style={styles.backgroundVideo} // any style you want
+                repeat={true} // make it a loop
+              /> */}
               <ImageBackground
-                source={require("../../../assets/images/logo-green.png")}
-                resizeMode="stretch"
-                style={styles.paneLogo}
-                imageStyle={{
-                  top: 8,
-                  left: 7,
-                  width: 27,
-                  height: 27,
-                }}
-              />
-              <Image
-                source={require("../../../assets/images/pincho.png")}
-                style={styles.paneExempt}
-                imageStyle={{
-                  top: 48,
-                  left: 7,
-                  width: 27,
-                  height: 27,
-                }}
-              />
-              <View style={styles.paneInfo}>
-                <MaterialCommunityIcons
-                  name="information-outline"
-                  style={styles.paneInfoIcon}
-                />
-              </View>
-
-              <ImageBackground
-                source={userPic}
+                source={require("../../../assets/images/mosque.jpg")}
                 resizeMode="cover"
-                style={styles.profilePic}
-                imageStyle={{
-                  top: 2,
-                  left: 0,
-                  width: 100,
-                  height: 100,
-                }}
-              />
+                style={styles.image}
+              >
+                <ImageBackground
+                  source={require("../../../assets/images/logo-green.png")}
+                  resizeMode="stretch"
+                  style={styles.paneLogo}
+                  imageStyle={{
+                    top: 8,
+                    left: 7,
+                    width: 27,
+                    height: 27,
+                  }}
+                />
+                <Image
+                  source={require("../../../assets/images/pincho.png")}
+                  style={styles.paneExempt}
+                  imageStyle={{
+                    top: 48,
+                    left: 7,
+                    width: 27,
+                    height: 27,
+                  }}
+                />
+                <View style={styles.paneInfo}>
+                  <MaterialCommunityIcons
+                    name="information-outline"
+                    style={styles.paneInfoIcon}
+                  />
+                </View>
 
-              <View style={styles.profileData}>
-                <Text style={styles.name}>{userData.name}</Text>
-                <Text
-                  style={styles.eid}
-                  onPress={() => {
-                    setHideEID((h) => !h);
-                    setHidePPN((p) => !p);
+                <ImageBackground
+                  source={userPic}
+                  resizeMode="cover"
+                  style={styles.profilePic}
+                  imageStyle={{
+                    top: 2,
+                    left: 0,
+                    width: 100,
+                    height: 100,
                   }}
-                >
-                  {`EID: ${
-                    hideEID ? hideEIDUtil(userData.eid) : userData.eid
-                  } • PPN: ${
-                    hidePPN ? hidePPNUtil(userData.ppn) : userData.ppn
-                  }`}
-                </Text>
-                <Text
-                  style={styles.dob}
-                  onPress={() => {
-                    setHideDOB((d) => !d);
-                  }}
-                >{`DoB: ${
-                  hideDOB ? hideDoBUtil(userData.bd) : userData.bd
-                }`}</Text>
-              </View>
-            </ImageBackground>
+                />
+
+                <View style={styles.profileData}>
+                  <Text style={styles.name}>{userData.name}</Text>
+                  <Text
+                    style={styles.eid}
+                    onPress={() => {
+                      setHideEID((h) => !h);
+                      setHidePPN((p) => !p);
+                    }}
+                  >
+                    {`EID: ${
+                      hideEID ? hideEIDUtil(userData.eid) : userData.eid
+                    } • PPN: ${
+                      hidePPN ? hidePPNUtil(userData.ppn) : userData.ppn
+                    }`}
+                  </Text>
+                  <Text
+                    style={styles.dob}
+                    onPress={() => {
+                      setHideDOB((d) => !d);
+                    }}
+                  >{`DoB: ${
+                    hideDOB ? hideDoBUtil(userData.bd) : userData.bd
+                  }`}</Text>
+                </View>
+              </ImageBackground>
+            </View>
             <View style={styles.qr}>
               <Text style={styles.qrText1}>{elapsedTime} - PCR Negative</Text>
               <Text style={styles.qrText2}>Since {formattedDate}</Text>
@@ -502,5 +513,12 @@ const styles = StyleSheet.create({
     fontSize: 15,
     color: colors.primary,
     marginRight: 10,
+  },
+  backgroundVideo: {
+    position: "absolute",
+    top: 0,
+    left: 0,
+    bottom: 0,
+    right: 0,
   },
 });
